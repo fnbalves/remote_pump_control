@@ -29,8 +29,6 @@ SECRET_KEY = "django-insecure-be81ou_e=z4l_o=2x=@odz&ypvil&*$w5g%7wqte029i7pl2mr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 THIRD_PARY_APPS = [
     'rest_framework'
 ]
@@ -141,8 +139,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-CAMERA_INDEX=0
-ARDUINO_PORT = read_env('ARDUINO_PORT', 'COM8')
+CAMERA_INDEX=2
+SERVER_URL = read_env('SERVER_URL', 'localhost')
+ARDUINO_PORT = read_env('ARDUINO_PORT', '/dev/ttyACM0')
 ARDUINO_BAUDRATE = 9600
 PUMP_ACTIVATION_CHAR = 'A'
 AUTHENTICATION_REQUIRED=True
+
+BASE_PROTOCOL = 'http'
+if 'https' in SERVER_URL:
+    BASE_PROTOCOL = 'https'
+
+SERVER_URL = SERVER_URL.replace('http://', '').replace('https://', '')
+
+ALLOWED_HOSTS = ['localhost', SERVER_URL]
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', '%s://%s' % (BASE_PROTOCOL, SERVER_URL)]
