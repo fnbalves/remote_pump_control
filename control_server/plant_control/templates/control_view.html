@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plant water controller</title>
+</head>
+<link rel="stylesheet" href="/static/css/main.css">
+<script class="javascript">
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    return cookieValue;
+                }
+            }
+            return null;
+        }
+        return null;
+    }
+
+    const sendWater = () => {
+        const csrftoken = getCookie('csrftoken');
+        const request = new XMLHttpRequest();
+        const url = "/send_water/";
+        request.open("POST", url, true);
+        request.setRequestHeader("X-CSRFToken", csrftoken); 
+        request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8"); 
+        console.log('SENDING DATA');
+        request.onreadystatechange = function() {
+            if (this.status == 200) {
+                console.log("SUCCESS");
+            }
+        }
+        request.send();
+    }
+</script>
+<body>
+    <div class="toolbox">
+        <a href="/logout/">Logout</a>
+    </div>
+    <div class="container">
+        <div class="command-container">
+            <div class="view">
+                <img src="/stream">
+            </div>   
+            <div class="controls">
+                <button class="control-btn" type="button" onClick="sendWater()">Ativar água</button>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
