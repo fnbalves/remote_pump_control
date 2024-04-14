@@ -19,8 +19,10 @@ body {
     height: 95vh;
     width: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    flex-direction: column;
+    justify-content: flex-start;
+    border: 0px;
 
     .command-container {
         padding: 3em;
@@ -46,6 +48,10 @@ body {
         align-items: center;
     }
     
+}
+
+.centered {
+    justify-content: center !important;
 }
 
 .control-btn {
