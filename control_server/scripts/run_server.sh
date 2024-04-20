@@ -8,7 +8,8 @@ done
 
 echo "Raspberry is online"
 
-export OWN_IP="http://$(hostname -I)"
+export SERVER_URL="http://raspberrypi"
+export OWN_IP="http://$(hostname -I | awk '{print $1}')"
 echo $OWN_IP
 python manage.py makemigrations
 python manage.py migrate

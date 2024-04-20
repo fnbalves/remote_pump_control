@@ -163,7 +163,7 @@ OWN_IP = OWN_IP.strip().replace('http://', '').replace('https://', '')
 
 ALLOWED_HOSTS = ['localhost', OWN_IP, SERVER_URL]
 print('ALLOWED_HOSTS', ALLOWED_HOSTS)
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', '%s://%s' % (BASE_PROTOCOL, SERVER_URL),
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', '%s://%s:8000' % (BASE_PROTOCOL, SERVER_URL),
 'http://%s:8000' % OWN_IP]
 print('CSRF_TRUSTED_ORIGINS', CSRF_TRUSTED_ORIGINS)
 
