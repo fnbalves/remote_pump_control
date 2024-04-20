@@ -10,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from .camera import *
 from .arduino import *
+from .gpio import *
 
 def test_user_authenticated(user):
     if not settings.AUTHENTICATION_REQUIRED:
@@ -51,8 +52,12 @@ class SendWater(APIView):
     permission_classes = [IsAuthenticated]
     
     def post(self, request, **kwargs):
-        arduino_handler = ArduinoHandler.get_instance()
-        arduino_handler.activate_pump()
+        if not settings.USE_GPIO:
+            arduino_handler = ArduinoHandler.get_instance()
+            arduino_handler.activate_pump()
+        else:
+            setup_pins()
+            run_pulse()
         return JsonResponse({"status": "ok", "description": "Water sent"}, status=status.HTTP_200_OK)
             
 class LogoutView(APIView):

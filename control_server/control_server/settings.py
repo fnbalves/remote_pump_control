@@ -139,12 +139,19 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
-CAMERA_INDEX=2
+CAMERA_INDEX=0
 SERVER_URL = read_env('SERVER_URL', 'localhost')
+AUTHENTICATION_REQUIRED=True
+USE_GPIO = read_env('USE_GPIO', 'TRUE') == 'TRUE'
+
+GPIO_TIME_TO_WAIT = int(read_env('GPIO_TIME_TO_WAIT', '2'))
+GPIO_USED_PIN = int(read_env('GPIO_USED_PIN', '16'))
+
+#Only used if USE_GPIO = False
 ARDUINO_PORT = read_env('ARDUINO_PORT', '/dev/ttyACM0')
 ARDUINO_BAUDRATE = 9600
 PUMP_ACTIVATION_CHAR = 'A'
-AUTHENTICATION_REQUIRED=True
+
 
 BASE_PROTOCOL = 'http'
 if 'https' in SERVER_URL:

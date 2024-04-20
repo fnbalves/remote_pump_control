@@ -1,6 +1,6 @@
-Django==5.0.2
-djangorestframework==3.14.0
-django-cors-headers==4.3.1
-djangorestframework-xml==2.0.0
-opencv-contrib-python==4.8.1.78
+Django
+djangorestframework
+django-cors-headers
+djangorestframework-xml
+#opencv-contrib-python==4.8.1.78 #It takes too long to build on Raspberry pi
 pyserial

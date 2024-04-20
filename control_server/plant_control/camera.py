@@ -10,8 +10,9 @@ class CameraHandler:
         
     def fetch_frame(self):
         grabbed, frame  = self.video_handler.read()
+        resized_frame = cv2.resize(frame, (640, 360))
         if grabbed:
-            _, frame = cv2.imencode('.jpg', frame)
+            _, frame = cv2.imencode('.jpg', resized_frame)
         return grabbed, frame
         
     @staticmethod
