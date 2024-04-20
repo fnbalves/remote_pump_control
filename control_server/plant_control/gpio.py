@@ -15,7 +15,11 @@ def run_pulse():
 def setup_and_run_pulse():
 	setup_pins()
 	run_pulse()
-	
+
+def clear_pin():
+	setup_pins()
+	GPIO.output(settings.GPIO_USED_PIN, GPIO.LOW)
+		
 def run_pulse_subprocess():
 	command = [
 	"python",
@@ -25,3 +29,5 @@ def run_pulse_subprocess():
 	"from plant_control.gpio import setup_and_run_pulse; setup_and_run_pulse()"
 	]
 	subprocess.Popen(command)
+
+clear_pin()

@@ -157,7 +157,13 @@ BASE_PROTOCOL = 'http'
 if 'https' in SERVER_URL:
     BASE_PROTOCOL = 'https'
 
-SERVER_URL = SERVER_URL.replace('http://', '').replace('https://', '')
+OWN_IP = read_env('OWN_IP', '')
+SERVER_URL = SERVER_URL.strip().replace('http://', '').replace('https://', '')
+OWN_IP = OWN_IP.strip().replace('http://', '').replace('https://', '')
 
-ALLOWED_HOSTS = ['localhost', SERVER_URL]
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', '%s://%s' % (BASE_PROTOCOL, SERVER_URL)]
+ALLOWED_HOSTS = ['localhost', OWN_IP, SERVER_URL]
+print('ALLOWED_HOSTS', ALLOWED_HOSTS)
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', '%s://%s' % (BASE_PROTOCOL, SERVER_URL),
+'http://%s:8000' % OWN_IP]
+print('CSRF_TRUSTED_ORIGINS', CSRF_TRUSTED_ORIGINS)
+
