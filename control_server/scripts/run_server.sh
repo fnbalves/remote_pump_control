@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Wait for raspberry pi to be online to get ip
+until $(curl --output /dev/null --silent --head --fail http://www.google.com); do
+    printf '.'
+    sleep 5
+done
+
+echo "Raspberry is online"
+
 export OWN_IP="http://$(hostname -I)"
 echo $OWN_IP
 python manage.py makemigrations
