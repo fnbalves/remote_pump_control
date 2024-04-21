@@ -30,10 +30,10 @@ class CameraStream(APIView):
     def image_gen():
         while True:
             #try:            
-                frame_data = yield
-                if frame_data is not None:
-                    print('GOT')
-                    yield frame_data
+            frame_data = yield
+            if frame_data is not None:
+                #print('GOT', frame_data)
+                yield frame_data
             #except:
             #    print('Exiting image generator')
             #    break

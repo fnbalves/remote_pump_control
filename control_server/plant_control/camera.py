@@ -10,7 +10,7 @@ class CameraHandler:
         self.subscribers = []
         
     def open_video(self):
-        self.video_handler = cv2.VideoCapture(settings.CAMERA_INDEX)
+        self.video_handler = cv2.VideoCapture(0)
         self.video_handler.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
         self.video_handler.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
         self.capture_thread = threading.Thread(
@@ -37,10 +37,9 @@ class CameraHandler:
             to_remove = []
             for sub in self.subscribers:
                 try:
-                    print('SENDING')
                     sub.send(data)
                 except:
-                    to_remove.add(sub)
+                    to_remove.append(sub)
         
             for sub in to_remove:
                 print('REMOVED')
