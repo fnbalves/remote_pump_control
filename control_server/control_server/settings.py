@@ -142,7 +142,7 @@ LOGIN_REDIRECT_URL = '/'
 CAMERA_INDEX=0
 SERVER_URL = read_env('SERVER_URL', 'localhost')
 AUTHENTICATION_REQUIRED=True
-USE_GPIO = read_env('USE_GPIO', 'TRUE') == 'TRUE'
+USE_GPIO = read_env('USE_GPIO', 'FALSE') == 'TRUE'
 
 GPIO_TIME_TO_WAIT = int(read_env('GPIO_TIME_TO_WAIT', '2'))
 GPIO_USED_PIN = int(read_env('GPIO_USED_PIN', '16'))

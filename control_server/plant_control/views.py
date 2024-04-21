@@ -9,10 +9,12 @@ from django.views.generic import TemplateView
 from django.views.decorators import gzip
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.cache import never_cache
 from django.conf import settings
 from .camera import *
 from .arduino import *
-from .gpio import *
+if settings.USE_GPIO:
+    from .gpio import *
 
 def test_user_authenticated(user):
     if not settings.AUTHENTICATION_REQUIRED:
@@ -41,7 +43,7 @@ class CameraStream(APIView):
             except:
                 print('Exiting image generator')
                 break
-    @method_decorator(gzip.gzip_page)            
+    @method_decorator([gzip.gzip_page, never_cache])            
     def get(self, *args, **kwargs):
         return StreamingHttpResponse(CameraStream.image_gen(), content_type="multipart/x-mixed-replace;boundary=frame")
             
