@@ -2,13 +2,14 @@ import cv2
 import threading
 import time
 from django.conf import settings
-
+from queue import Queue
                      
 class CameraHandler:
     _instance = None
     
     def __init__(self):
         self.video_opened = False
+        self.sub_idx = 0
         self.subscribers = []
         self.open_video()
         self.start_capturing()
@@ -35,12 +36,12 @@ class CameraHandler:
         return grabbed, frame
     
     def add_subscriber(self, subscriber):
-        print('NEW SUB', self.subscribers)
+        self.sub_idx += 1
+        subscriber.idx = self.sub_idx
         self.subscribers.append(subscriber)
-        print('NUM SUBS', len(self.subscribers))
         
     def remove_subscriber(self, subscriber):
-        self.subscribers.remove(subscriber)
+        self.subscribers = [s for s in self.subscribers if s.idx != subscriber.idx]
         
     def update_subscribers(self):
         while True:
@@ -52,7 +53,6 @@ class CameraHandler:
                     continue
                 payload = frame.tobytes()
                 data = b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + payload + b'\r\n\r\n'
-                #print('NUM SUBS', len(self.subscribers))
                 for sub in self.subscribers:
                     sub.new_data(data)
             else:
@@ -63,13 +63,13 @@ class CameraHandler:
     @staticmethod
     def get_instance():
         if CameraHandler._instance is None:
-            print('CREATING INSTANCE')
             CameraHandler._instance = CameraHandler()
         return CameraHandler._instance
             
 class CameraConsumer:
-    def __init__(self):
-        self.frame_buffer = []
+    def __init__(self, idx=0):
+        self.idx = idx
+        self.frame_buffer = Queue()
         self.camera_handler = None
         
     def subscribe(self, camera_handler):
@@ -77,15 +77,12 @@ class CameraConsumer:
         self.camera_handler.add_subscriber(self)
         
     def new_data(self, data):
-        self.frame_buffer.append(data)
+        self.frame_buffer.put(data)
         
     def image_generator(self):
         while True:
             try:
-                if len(self.frame_buffer) > 0:
-                        yield self.frame_buffer.pop()
-                #else:
-                #    time.sleep(1)
+                yield self.frame_buffer.get()
             except: #Broken pipe
                 if self.camera_handler is not None:
                     self.camera_handler.remove_subscriber(self)
