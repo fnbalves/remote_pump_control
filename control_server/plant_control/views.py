@@ -1,3 +1,4 @@
+import traceback as tb
 from django.shortcuts import render, redirect
 from django.http import StreamingHttpResponse, JsonResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -5,6 +6,7 @@ from django.utils.decorators import method_decorator
 from rest_framework.permissions import BasePermission
 from rest_framework.views import APIView, status
 from django.views.generic import TemplateView
+from django.views.decorators import gzip
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
@@ -29,20 +31,19 @@ class CameraStream(APIView):
         print('OPENED STREAM')
         camera_handler = CameraHandler.get_instance()
         while True:
-            grabbed, frame = camera_handler.fetch_frame()
-            if not grabbed:
-                print('SKIPPED')
-                continue
-            payload = frame.tobytes()
-            yield(b'--frame\r\n'
-              b'Content-Type: image/jpeg\r\n\r\n' + payload + b'\r\n\r\n')
-    
+            try:            
+                grabbed, frame = camera_handler.fetch_frame()
+                if not grabbed:
+                    continue
+                payload = frame.tobytes()
+                yield(b'--frame\r\n'
+                  b'Content-Type: image/jpeg\r\n\r\n' + payload + b'\r\n\r\n')
+            except:
+                print('Exiting image generator')
+                break
+    @method_decorator(gzip.gzip_page)            
     def get(self, *args, **kwargs):
-        try:
-            return StreamingHttpResponse(CameraStream.image_gen(), content_type="multipart/x-mixed-replace;boundary=frame")
-        except:
-            return JsonResponse({"status": "error", "description": 
-                "Failed to open camera"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return StreamingHttpResponse(CameraStream.image_gen(), content_type="multipart/x-mixed-replace;boundary=frame")
             
 @method_decorator(user_passes_test(test_user_authenticated), name='dispatch')       
 class ControlPage(TemplateView):
