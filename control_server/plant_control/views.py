@@ -10,6 +10,7 @@ from django.views.decorators import gzip
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
+from django.views.decorators.cache import never_cache
 from .camera import *
 from .arduino import *
 #from .gpio import *
@@ -26,27 +27,20 @@ class IsAuthenticated(BasePermission):
 class CameraStream(APIView):
     permission_classes = [IsAuthenticated]
     
-    @staticmethod
-    def image_gen():
-        while True:
-            #try:            
-            frame_data = yield
-            if frame_data is not None:
-                #print('GOT', frame_data)
-                yield frame_data
-            #except:
-            #    print('Exiting image generator')
-            #    break
     
     @staticmethod
     def open_image_gen():
+        print('OPENING OTHER')
         camera_handler = CameraHandler.get_instance()
-        gen = CameraStream.image_gen()
-        camera_handler.add_subscriber(gen)
-        return gen
+        print('C', camera_handler)
+        gen = CameraConsumer()
+        gen.subscribe(camera_handler)
+        return gen.image_generator()
         
-    @method_decorator(gzip.gzip_page)            
+    @method_decorator(gzip.gzip_page)
+    @method_decorator(never_cache)            
     def get(self, *args, **kwargs):
+        print('CALLED THIS')
         return StreamingHttpResponse(CameraStream.open_image_gen(), content_type="multipart/x-mixed-replace;boundary=frame")
             
 @method_decorator(user_passes_test(test_user_authenticated), name='dispatch')       
