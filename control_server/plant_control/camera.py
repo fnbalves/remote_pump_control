@@ -37,11 +37,13 @@ class CameraHandler:
             to_remove = []
             for sub in self.subscribers:
                 try:
+                    print('SENDING')
                     sub.send(data)
                 except:
                     to_remove.add(sub)
         
             for sub in to_remove:
+                print('REMOVED')
                 self.subscribers.remove(sub)
         
     @staticmethod

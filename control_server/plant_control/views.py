@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.conf import settings
 from .camera import *
 from .arduino import *
-from .gpio import *
+#from .gpio import *
 
 def test_user_authenticated(user):
     if not settings.AUTHENTICATION_REQUIRED:
@@ -29,12 +29,14 @@ class CameraStream(APIView):
     @staticmethod
     def image_gen():
         while True:
-            try:            
+            #try:            
                 frame_data = yield
-                yield frame_data
-            except:
-                print('Exiting image generator')
-                break
+                if frame_data is not None:
+                    print('GOT')
+                    yield frame_data
+            #except:
+            #    print('Exiting image generator')
+            #    break
     
     @staticmethod
     def open_image_gen():
@@ -58,9 +60,11 @@ class SendWater(APIView):
         if not settings.USE_GPIO:
             arduino_handler = ArduinoHandler.get_instance()
             arduino_handler.activate_pump()
+            pass
         else:
-            setup_pins()
-            run_pulse()
+            #setup_pins()
+            #run_pulse()
+            pass
         return JsonResponse({"status": "ok", "description": "Water sent"}, status=status.HTTP_200_OK)
             
 class LogoutView(APIView):
