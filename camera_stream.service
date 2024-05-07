@@ -1,0 +1,8 @@
+[Unit]
+Description=Systemd service for starting camera stream
+
+[Service]
+ExecStart=bash /home/felipe/codes/remote_pump_control/start_mjpeg_streamer.sh
+
+[Install]
+WantedBy=default.target

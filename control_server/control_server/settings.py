@@ -157,13 +157,18 @@ BASE_PROTOCOL = 'http'
 if 'https' in SERVER_URL:
     BASE_PROTOCOL = 'https'
 
+PLANT_CAMERA_STREAM='http://raspberrypi:8080/?action=stream'
+COMPUTER_CAMERA_STREAM='http://beaglebone:8080/?action=stream'
+USE_OWN_CAMERA_STREAM = False
+WAKE_PC_SCRIPT = "bash /home/felipe/wol.sh"
+
 OWN_IP = read_env('OWN_IP', '')
 SERVER_URL = SERVER_URL.strip().replace('http://', '').replace('https://', '')
 OWN_IP = OWN_IP.strip().replace('http://', '').replace('https://', '')
 
-ALLOWED_HOSTS = ['localhost', OWN_IP, SERVER_URL]
+ALLOWED_HOSTS = ['localhost', '192.168.1.102', OWN_IP, SERVER_URL]
 print('ALLOWED_HOSTS', ALLOWED_HOSTS)
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', '%s://%s:8000' % (BASE_PROTOCOL, SERVER_URL),
-'http://%s:8000' % OWN_IP]
+'http://%s:8000' % OWN_IP, 'http://192.168.1.102:8000']
 print('CSRF_TRUSTED_ORIGINS', CSRF_TRUSTED_ORIGINS)
 

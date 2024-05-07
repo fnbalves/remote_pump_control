@@ -35,6 +35,13 @@ body {
     }
 
     .view {
+        .camera-select {
+            display: flex
+            flex-direction: row;
+            justify-content: space-between;
+            
+        }
+        
         img {
             width: 100%;
         }
@@ -61,8 +68,23 @@ body {
     background-color: #3F5DD2;
     color: white;
     padding: 1em; 
+    margin: 1em;
     cursor: pointer;
 
+}
+
+.camera-btn {
+    border: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 5px;
+    background-color: #3F5DD2;
+    color: white;
+    padding: 1em; 
+    margin-right: 1em;
+    margin-bottom: 1em;
+    margin-top: 0em;
+    cursor: pointer;
 }
 
 .inputs {

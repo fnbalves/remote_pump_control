@@ -1,4 +1,5 @@
 import traceback as tb
+import os
 from django.shortcuts import render, redirect
 from django.http import StreamingHttpResponse, JsonResponse
 from django.contrib.auth.decorators import user_passes_test
@@ -44,6 +45,7 @@ class CameraStream(APIView):
 @method_decorator(user_passes_test(test_user_authenticated), name='dispatch')       
 class ControlPage(TemplateView):
     template_name = 'control_view.html'
+    extra_context={'plant_url': settings.PLANT_CAMERA_STREAM, 'pc_url': settings.COMPUTER_CAMERA_STREAM}
     
 class SendWater(APIView):
     permission_classes = [IsAuthenticated]
@@ -58,7 +60,14 @@ class SendWater(APIView):
             run_pulse()
             pass
         return JsonResponse({"status": "ok", "description": "Water sent"}, status=status.HTTP_200_OK)
-            
+
+class WakePc(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, **kwargs):
+        os.system(settings.WAKE_PC_SCRIPT)
+        return JsonResponse({"status": "ok", "description": "Pc awake"}, status=status.HTTP_200_OK)
+                    
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
     

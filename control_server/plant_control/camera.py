@@ -16,8 +16,8 @@ class CameraHandler:
         
     def open_video(self):
         self.video_handler = cv2.VideoCapture(0)
-        self.video_handler.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
-        self.video_handler.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+        self.video_handler.set(cv2.CAP_PROP_FRAME_WIDTH, 160)
+        self.video_handler.set(cv2.CAP_PROP_FRAME_HEIGHT, 120)
         self.video_opened = True
         
     def close_video(self):

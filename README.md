@@ -4,6 +4,10 @@ Projeto para a ativação remota de uma bomba de água para pequenas plantas
 
 # Composição do projeto
 
+## mjpg-streamer
+
+Instale o mjpg-streamer de https://github.com/jacksonliam/mjpg-streamer
+
 ## control_server
 
 Servidor escrito em django para controlar a bomba via interface web. Contém autenticação. Crie usuários utilizando a interface admin do django

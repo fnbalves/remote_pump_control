@@ -37,6 +37,32 @@
         }
         request.send();
     }
+    
+    const wakePc = () => {
+        const csrftoken = getCookie('csrftoken');
+        const request = new XMLHttpRequest();
+        const url = "/wake_pc/";
+        request.open("POST", url, true);
+        request.setRequestHeader("X-CSRFToken", csrftoken); 
+        request.setRequestHeader("Content-Type", "text/plain;charset=UTF-8"); 
+        console.log('SENDING DATA');
+        request.onreadystatechange = function() {
+            if (this.status == 200) {
+                console.log("SUCCESS");
+            }
+        }
+        request.send();
+    }
+    
+    const toggleToPc = () => {
+        const img = document.getElementById("viewer-img");
+        img.setAttribute("src", "{{ pc_url }}");
+    }
+    
+    const toggleToPlant = () => {
+        const img = document.getElementById("viewer-img");
+        img.setAttribute("src", "{{ plant_url }}");
+    }
 </script>
 <body>
     <div class="toolbox">
@@ -45,10 +71,15 @@
     <div class="container">
         <div class="command-container">
             <div class="view">
-                <img src="/stream">
+                <div clas="camera-select">
+                    <button class="camera-btn" onClick="toggleToPlant()">Cacto</button>
+                    <button class="camera-btn" onClick="toggleToPc()">Pc</button>
+                </div>
+                <img id="viewer-img" src="{{ plant_url }}">
             </div>   
             <div class="controls">
                 <button class="control-btn" type="button" onClick="sendWater()">Ativar água</button>
+                <button class="control-btn" type="button" onClick="wakePc()">Ligar pc</button>
             </div>
         </div>
     </div>
